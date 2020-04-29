@@ -8,3 +8,4 @@ export interface Score {
 export interface HasClassName {
     className?: string
 }
+

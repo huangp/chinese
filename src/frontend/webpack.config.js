@@ -1,15 +1,22 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
 
+const webpack = require('webpack')
+
 module.exports = (env) => {
     const output = (env && env.outputPath) || path.join(__dirname, "/target")
+
+    console.info("env:", JSON.stringify(env))
+
+    const backendUrl = env.BACKEND === 'localhost' ? 'http://localhost:8080' : ''
+
+    console.info(`backend url: ${backendUrl}`)
+//
+    // const output = env.output || path.join(__dirname, '/target')
+    //
+    // console.info("output:" + output)
+
     return {
-        // console.info("env:", JSON.stringify(env))
-        //
-        // const output = env.output || path.join(__dirname, '/target')
-        //
-        // console.info("output:" + output)
-        // return {
         mode: 'production',
         module: {
             rules: [
@@ -61,6 +68,9 @@ module.exports = (env) => {
                 path: output,
                 // path: path.join(__dirname, '../../target/'),
                 hash: true
+            }),
+            new webpack.DefinePlugin({
+                BACKEND_URL: JSON.stringify(backendUrl)
             })
         ],
 

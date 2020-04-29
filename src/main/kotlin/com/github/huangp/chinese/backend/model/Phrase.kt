@@ -50,6 +50,11 @@ class Phrase(
         return computeContentHash(content)
     }
 
+    override fun toString(): String {
+        return "Phrase(id=$id, version=$version, content='$content', contentHash='$contentHash')"
+    }
+
+
     companion object {
         fun computeContentHash(content: String): String {
             val messageDigest = MessageDigest.getInstance("SHA-256")

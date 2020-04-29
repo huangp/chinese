@@ -1,6 +1,12 @@
 import {AxiosResponse} from "axios";
 
-export const apiBaseUrl = 'http://localhost:8080/api'
+// console.info("=== process env", BACKEND_URL)
+
+declare var BACKEND_URL: string
+
+const backendUrl= BACKEND_URL
+
+export const apiBaseUrl = `${backendUrl}/api`
 
 export const apiUser = `${apiBaseUrl}/user`
 export const apiPhrase = `${apiBaseUrl}/phrase`

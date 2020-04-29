@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiResponses
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.transaction.annotation.Transactional
+import java.lang.Exception
 import java.net.URI
 import javax.inject.Inject
 import javax.validation.Valid
@@ -74,7 +75,7 @@ open class PhraseService @Inject constructor(
         val supervisor = authenticatedSupervisorService.getAuthenticatedSupervisor()
         val learners = learnerRepository.findAllBySupervisorEqualsAndActiveTrue(supervisor)
 
-        val newPhrases = phrases.map {
+        val newPhrases = phrases.toSet().map {
             val computeContentHash = Phrase.computeContentHash(it)
             Pair(it, computeContentHash)
         }.filter {
@@ -87,10 +88,15 @@ open class PhraseService @Inject constructor(
                 this.contentHash = it.second
                 this.difficulty = difficulty
             }
-            val savedPhrase = phraseRepository.save(phrase)
-            learners.forEach {
-                phraseFamiliarityRepository.save(PhraseFamiliarity(it, savedPhrase))
+            try {
+                val savedPhrase = phraseRepository.save(phrase)
+                learners.forEach {
+                    phraseFamiliarityRepository.save(PhraseFamiliarity(it, savedPhrase))
+                }
+            } catch (ex: Exception) {
+                log.warn("error saving: {}", phrase, ex)
             }
+            log.info("saved {}", phrase)
         }
 
         // TODO not exactly the new added phrases location
