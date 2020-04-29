@@ -1,0 +1,4 @@
+- add reward system
+- user phrase content hash as primary key?
+- allow supervisor to add child (learner link to a supervisor)
+- add a route and page to display all time scores/stats
