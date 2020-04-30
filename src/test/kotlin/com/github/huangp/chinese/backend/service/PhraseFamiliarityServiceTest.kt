@@ -50,8 +50,8 @@ internal class PhraseFamiliarityServiceTest {
 
         val saved = savedCaptor.value
         Assertions.assertThat(saved).hasSize(1)
-        // one correct in 3 letters phrase will add 100 / 3 / 10 = 3.33
-        Assertions.assertThat(saved.toList()[0].familiarity).isEqualTo(3)
+        // one correct in 3 letters phrase will add 100 / 3 / 6 = 5
+        Assertions.assertThat(saved.toList()[0].familiarity).isEqualTo(5)
 
     }
 
@@ -72,7 +72,7 @@ internal class PhraseFamiliarityServiceTest {
 
         val saved = savedCaptor.value
         Assertions.assertThat(saved).hasSize(1)
-        // one correct in 3 letters phrase will add 100 / 3 / 10 = 3.33
+        // one correct in 3 letters phrase will add 100 / 3 / 6 = 5
         // per char max is 100 / 3 = 33
         Assertions.assertThat(saved.toList()[0].familiarity).isEqualTo(33)
 
