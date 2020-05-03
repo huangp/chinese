@@ -8,6 +8,5 @@ interface PhraseRepository : JpaRepository<Phrase, Long> {
 
     fun findByContentHash(contentHash: String): Phrase?
 
-//    fun findTopByOOrderBy
-
+//    fun findTopByOrderBy
 }

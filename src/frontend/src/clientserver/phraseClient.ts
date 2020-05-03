@@ -15,3 +15,10 @@ export const addPhrase = async (content: string): Promise<void> => {
     const response = await axios.post(`${apiPhrase}`, payload, {withCredentials: true})
     return apiHandler<void>(response)
 }
+
+export const getAllCharacters = async (): Promise<string[]> => {
+    console.debug("=== getting all characters ===")
+
+    const response = await axios.get(`${apiPhrase}/allcharacters`, {withCredentials: true})
+    return apiHandler<string[]>(response)
+}

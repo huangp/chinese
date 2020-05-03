@@ -112,6 +112,14 @@ open class PhraseService @Inject constructor(
     }
 
     @GET
+    @Path("allcharacters")
+    @Transactional(readOnly = true)
+    open fun getAllCharacters(): Set<String> {
+        val allChars: List<String> = phraseRepository.findAll().map { phrase -> phrase.content.toCharArray().map { it.toString() } }.flatten()
+        return allChars.toSet()
+    }
+
+    @GET
     @Path("recent")
     @Transactional(readOnly = true)
     open fun getRecentPhrases(): Set<String> {
