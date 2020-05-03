@@ -17,6 +17,13 @@ export const saveUserScore = async (username: string, scores: Score[], phrases: 
     return apiHandler(response)
 }
 
+export const getUserScoresForAllFamiliarCharacters = async (username: string) : Promise<Score[]> => {
+    console.info(`getting familiar characters for user ${username}...`)
+
+    const response = await axios.get(`${apiScore}/user/${username}/scoreboard`, {withCredentials: true})
+    return apiHandler(response)
+}
+
 // cached type in localStorage
 interface UserScores {
     user: string;

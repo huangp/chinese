@@ -16,6 +16,7 @@ import {getPhrases} from "../clientserver/phraseClient";
 import {AddPhrase} from "./AddPhrase";
 import {ErrorBanner} from "./ErrorBanner";
 import {Loading} from "./Loading";
+import {ScoreBoard} from "./ScoreBoard";
 
 // Set an initial global state directly:
 setGlobal({
@@ -72,6 +73,8 @@ class App extends React.PureComponent {
         }
 
         console.debug("current global state", this.global)
+
+        const currentUser = user ? user.username : undefined
         return (
             <Router>
                 <div className="mt-5">
@@ -80,6 +83,9 @@ class App extends React.PureComponent {
                     <Switch>
                         <Route path="/phrase/add">
                             <AddPhrase/>
+                        </Route>
+                        <Route path="/scoreboard">
+                            <ScoreBoard username={currentUser} />
                         </Route>
                         <Route path="/">
                             <Home/>

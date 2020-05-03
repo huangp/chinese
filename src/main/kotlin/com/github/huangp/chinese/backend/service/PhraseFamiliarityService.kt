@@ -44,8 +44,8 @@ class PhraseFamiliarityService @Inject constructor(
 
     companion object {
         private val logger: Logger = LoggerFactory.getLogger(PhraseFamiliarityService::class.java)
+        const val NUM_OF_CORRECT_AS_FAMILIAR_TO_ONE_CHAR = 6
         private const val MAX_FAMILIARITY = 100
-        private const val NUM_OF_CORRECT_AS_FAMILIAR_TO_ONE_CHAR = 6
         private const val INCORRECT_PENALTY = 0.5
 
         fun calculatePhrasePointsFromScore(score: Score, phraseContent: String): Int {
@@ -60,5 +60,6 @@ class PhraseFamiliarityService @Inject constructor(
                 else -> points.toInt()
             }
         }
+
     }
 }

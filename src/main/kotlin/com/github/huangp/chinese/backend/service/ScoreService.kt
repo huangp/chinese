@@ -96,6 +96,23 @@ open class ScoreService @Inject constructor(
         }
     }
 
+    @GET
+    @Path("user/{username}/scoreboard")
+    @Transactional(readOnly = true)
+    open fun getFamiliarCharactersForUser(@PathParam("username") username: String): Response {
+        val user = learnerRepository.findByUsername(username)
+        return if (user == null) {
+            Response.status(Response.Status.NOT_FOUND).build()
+        } else {
+
+            val scores: List<ScoreDto> = scoreRepository
+                    .findScoresByLearnerEqualsAndCorrectGreaterThanOrderByFirstSeenAsc(user,
+                            PhraseFamiliarityService.NUM_OF_CORRECT_AS_FAMILIAR_TO_ONE_CHAR)
+                    .map { it.toDto() }
+            Response.ok(scores).build()
+        }
+    }
+
 
 
     @GET
