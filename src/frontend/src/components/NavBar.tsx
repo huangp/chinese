@@ -1,17 +1,14 @@
 import React, {useGlobal, setGlobal} from "reactn"
 import {useState} from "react"
 import {Link, NavLink} from "react-router-dom"
-import {errorHandler} from "../utils";
 import classnames from "classnames"
-import {User} from "../clientserver/userClient"
 import {
     clearUserScoresInLocalStorage,
     getScoresByUserFromLocalStorage,
-    saveScoresToLocalStorage,
     saveUserScore
 } from "../clientserver/scoreClient";
-import {State} from "reactn/default"
 import {Loading} from "./Loading";
+import {AwardFillIcon, ChatIcon} from "./Icon";
 
 export const NavBar = () => {
     const [users] = useGlobal('users')
@@ -22,23 +19,12 @@ export const NavBar = () => {
 
     const [showCollapse, toggleShowCollapse] = useState(false)
 
-    const switchUser = (userToSwitchTo: User) => {
-        const currentUser = user.username
-        setGlobal<State>(saveScoresToLocalStorage(currentUser, scores)
-            .then(() => getScoresByUserFromLocalStorage(userToSwitchTo.username))
-            .then(scores => ({
-                    user: userToSwitchTo,
-                    scores,
-                    selected: []
-                })
-            ).catch(errorHandler)
-        )
-    }
+    const currentUsername = user ? user.username : undefined
 
     const saveScores = () => {
         setGlobal({loading: true})
         users.forEach(async u => {
-            const scoresToSave = u.username === user.username ? scores : getScoresByUserFromLocalStorage(u.username)
+            const scoresToSave = u.username === currentUsername ? scores : getScoresByUserFromLocalStorage(u.username)
             try {
                 await saveUserScore(u.username, scoresToSave, phrases)
                 await clearUserScoresInLocalStorage(u.username)
@@ -65,11 +51,11 @@ export const NavBar = () => {
     })
 
     const userNav = users.map(u => {
-            const className = `nav-item ${u.username === user.username ? 'active' : ''}`
+            const className = `nav-item ${u.username === currentUsername ? 'active' : ''}`
 
             return (
                 <li className={className} key={u.username}>
-                    <a className="nav-link" href="#" onClick={e => u !== user ? switchUser(u) : false}>{u.name}</a>
+                    <Link className="nav-link" to={`/${u.username}`}>{u.name}</Link>
                 </li>
             )
         }
@@ -87,7 +73,9 @@ export const NavBar = () => {
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <Link to="/" className="navbar-brand" href="">中文</Link>
+            <Link to="/" className="navbar-brand text-primary" >
+                <AwardFillIcon />
+            </Link>
             <button className={togglerClassname} type="button" onClick={e => toggleShowCollapse(!showCollapse)}
                     aria-controls="navbarNav" aria-expanded={showCollapse} aria-label="Switch User">
                 <span className="navbar-toggler-icon"/>

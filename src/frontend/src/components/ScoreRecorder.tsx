@@ -32,7 +32,7 @@ const updateScore = (global: State, dispatch, action: RecognizeState) => {
     const {scores, selected, phrase} = global
     const allChars: string[] = Array.from(phrase)
 
-    console.debug("debug", selected)
+    console.debug("selected characters", selected)
 
     if (action == RecognizeState.allCorrect || action == RecognizeState.allWrong) {
         const correctness = action == RecognizeState.allCorrect

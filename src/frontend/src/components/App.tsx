@@ -41,7 +41,6 @@ class App extends React.PureComponent {
                     loading: false,
                     phrases,
                     users,
-                    user: users[0],
                     phrase: nextPhrase(phrases)
                 }
             }
@@ -74,7 +73,6 @@ class App extends React.PureComponent {
 
         console.debug("current global state", this.global)
 
-        const currentUser = user ? user.username : undefined
         return (
             <Router>
                 <div className="mt-5">
@@ -85,10 +83,13 @@ class App extends React.PureComponent {
                             <AddPhrase/>
                         </Route>
                         <Route path="/scoreboard">
-                            <ScoreBoard username={currentUser} />
+                            <ScoreBoard user={user} />
+                        </Route>
+                        <Route path="/:username">
+                            <Home/>
                         </Route>
                         <Route path="/">
-                            <Home/>
+                            <div>Select a learner</div>
                         </Route>
                         <Route path="*">
                             <Redirect to={`/`}/>
