@@ -2,6 +2,7 @@ import React, {setGlobal, useDispatch, useGlobal} from "reactn"
 import {Score} from "../app";
 import {State} from "reactn/default";
 import {nextPhrase} from "../clientserver/phraseService"
+import {saveUserScore} from "../clientserver/scoreClient";
 
 enum RecognizeState {
     selectedCorrect, allCorrect, allWrong
@@ -29,7 +30,7 @@ const ensureCurrentScore = (scores: Score[], character: string): Score => {
 
 // reducer to change score
 const updateScore = (global: State, dispatch, action: RecognizeState) => {
-    const {scores, selected, phrase} = global
+    const {scores, selected, phrase, user} = global
     const allChars: string[] = Array.from(phrase)
 
     console.debug("selected characters", selected)
@@ -73,7 +74,7 @@ export const ScoreRecorder = () => {
     const allCorrect = e => updateScoreReducer(RecognizeState.allCorrect).then(getNextPhraseReducer)
     const allWrong = e => updateScoreReducer(RecognizeState.allWrong).then(getNextPhraseReducer)
 
-    const getNewPhraseCallback = e =>
+    const nextPhraseCallback = e =>
         setGlobal({phrase: nextPhrase(phrases), selected: []})
 
     return (
@@ -88,7 +89,7 @@ export const ScoreRecorder = () => {
                 <button type="button" className="btn btn-danger btn-block" onClick={allWrong}>All wrong</button>
             </div>
             <div className="col-sm">
-                <button type="button" className="btn btn-secondary btn-block" onClick={getNewPhraseCallback}>Get new phrase</button>
+                <button type="button" className="btn btn-secondary btn-block" onClick={nextPhraseCallback}>Next phrase</button>
             </div>
         </div>
     )

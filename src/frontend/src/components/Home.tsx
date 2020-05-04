@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import {getScoresByUserFromLocalStorage, saveScoresToLocalStorage} from "../clientserver/scoreClient";
 import {errorHandler} from "../utils";
 import {State} from "reactn/default";
+import {Loading} from "./Loading";
 
 export const Home = () => {
     const {username} = useParams()
@@ -14,14 +15,13 @@ export const Home = () => {
     const [user] = useGlobal('user')
     const [users] = useGlobal('users')
     const currentUser = user ? user.username : undefined
-    const selectUser = users.find(u => u.username === username)
 
-    if (currentUser === undefined) {
-        // do not have selected user yet
-        setGlobal<State>(Promise.resolve({
-            user: selectUser
-        }))
-    } else if (currentUser !== username) {
+    if (currentUser === undefined && users.length == 0) {
+        // the app is not ready yet
+        return <Loading/>
+    }
+
+    if (currentUser !== username) {
         const selectUser = users.find(u => u.username === username)
 
         // we need to switch user
@@ -34,7 +34,6 @@ export const Home = () => {
                     selected: []
                 })
             ).catch(errorHandler);
-        // @ts-ignore
         setGlobal<State>(promise)
     }
 

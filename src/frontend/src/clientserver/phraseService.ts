@@ -1,6 +1,9 @@
 let counter = 0
 
-export const nextPhrase = (phrases: string[]): string => {
+export const nextPhrase = (phrases: string[], overrideCounter: number = counter): string => {
+    if (overrideCounter !== counter) {
+        counter = overrideCounter
+    }
     if (phrases.length === 0) {
         return ""
     }

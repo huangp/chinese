@@ -22,3 +22,15 @@ export const getAllCharacters = async (): Promise<string[]> => {
     const response = await axios.get(`${apiPhrase}/allcharacters`, {withCredentials: true})
     return apiHandler<string[]>(response)
 }
+
+let page = 0
+
+export const getNextPhrases = async (): Promise<string[]> => {
+    console.debug("=== getting next set of phrase ===")
+    // clear local cache
+    localStorage.clear()
+
+    const response = await axios.get(`${apiPhrase}/next?page=${page}`, {withCredentials: true})
+    page += 1
+    return apiHandler<string[]>(response)
+}

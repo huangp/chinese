@@ -11,6 +11,8 @@ import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.transaction.annotation.Transactional
 import java.lang.Exception
 import java.net.URI
@@ -127,11 +129,22 @@ open class PhraseService @Inject constructor(
         val supervisor = authenticatedSupervisorService.getAuthenticatedSupervisor()
         val learners = learnerRepository.findAllBySupervisorEqualsAndActiveTrue(supervisor)
         val phrasesFamiliarity = phraseFamiliarityRepository
-                .findTop20ByLearnerInAndFamiliarityBetweenOrderByLastModifiedDateAsc(learners, 0, 100)
+                .findTop20ByLearnerInAndFamiliarityBetweenOrderByLastModifiedDateDesc(learners, 0, PhraseFamiliarityService.MAX_FAMILIARITY)
         return phrasesFamiliarity.mapNotNull { it.phrase?.content }.toSet()
 
-//        val pager = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "modifiedDate"))
-//        return phraseRepository.findAll(pager).map { it.content ?: "" }.toList()
+    }
+
+    @GET
+    @Path("next")
+    @Transactional(readOnly = true)
+    open fun getNextPhrases(@QueryParam("page") @DefaultValue("0") page: Int, @QueryParam("size") @DefaultValue("20") size: Int): Set<String> {
+        val supervisor = authenticatedSupervisorService.getAuthenticatedSupervisor()
+        val learners = learnerRepository.findAllBySupervisorEqualsAndActiveTrue(supervisor)
+        val pager: Pageable = PageRequest.of(page, size)
+        val phrasesFamiliarity = phraseFamiliarityRepository
+                .findByLearnerInAndFamiliarityBetweenOrderByLastModifiedDateDesc(learners, 0, PhraseFamiliarityService.MAX_FAMILIARITY, pager)
+        return phrasesFamiliarity.mapNotNull { it.phrase?.content }.toSet()
+
     }
 
     companion object {

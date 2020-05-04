@@ -9,6 +9,8 @@ import {
 } from "../clientserver/scoreClient";
 import {Loading} from "./Loading";
 import {AwardFillIcon, ChatIcon} from "./Icon";
+import {getNextPhrases} from "../clientserver/phraseClient";
+import {nextPhrase} from "../clientserver/phraseService";
 
 export const NavBar = () => {
     const [users] = useGlobal('users')
@@ -42,6 +44,25 @@ export const NavBar = () => {
         })
     }
 
+    const getNextNewPhrases = async () => {
+        await setGlobal({loading: true})
+        try {
+            const phrases = await getNextPhrases()
+            setGlobal({
+                loading: false,
+                selected: [],
+                scores: [],
+                phrases,
+                phrase: nextPhrase(phrases, 0)
+            })
+        } catch (e) {
+            setGlobal({
+                loading: false,
+                error: e
+            })
+        }
+    }
+
     const navDivClassname = classnames('collapse navbar-collapse', {
         show: showCollapse
     })
@@ -61,7 +82,7 @@ export const NavBar = () => {
         }
     )
 
-    const saveScoreBtnClass = classnames("btn btn-outline-success m-2 my-sm-0", {
+    const actionBtnClass = classnames("btn btn-outline-success m-2 my-sm-0", {
         visible: !loading,
         invisible: loading
     })
@@ -85,7 +106,8 @@ export const NavBar = () => {
                     {userNav}
                 </ul>
                 <Loading className={loadingClass} />
-                <button className={saveScoreBtnClass} onClick={saveScores} >Save scores</button>
+                <button className={actionBtnClass} onClick={saveScores} >Save scores</button>
+                <button className={actionBtnClass} onClick={getNextNewPhrases} >Get new phrases</button>
                 <Link className="btn btn-outline-success m-2 my-sm-0 float-right" to="/phrase/add">Add new phrase</Link>
             </div>
         </nav>
