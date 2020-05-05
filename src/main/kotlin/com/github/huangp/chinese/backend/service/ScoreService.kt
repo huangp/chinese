@@ -73,7 +73,7 @@ open class ScoreService @Inject constructor(
             val saved: Iterable<Score> = scoreRepository.saveAll(combined)
 
             // calculate familiarity for each phrase
-            phraseFamiliarityService.calculateFromScores(saved, updateScores.phrases)
+            phraseFamiliarityService.calculateFromScores(user, saved, updateScores.phrases)
             val result = saved.map { it.toDto() }
             log.info("scores saved {}", result)
             Response.ok().build()

@@ -8,12 +8,13 @@ enum RecognizeState {
     selectedCorrect, allCorrect, allWrong
 }
 
-const updateCount = (correct: boolean, currentScore: Score) => {
+const updateCount = (correct: boolean, currentScore: Score): Score => {
     if (correct) {
         currentScore.correct++
     } else {
         currentScore.incorrect++
     }
+    return currentScore
 }
 
 const ensureCurrentScore = (scores: Score[], character: string): Score => {
@@ -29,34 +30,41 @@ const ensureCurrentScore = (scores: Score[], character: string): Score => {
 }
 
 // reducer to change score
-const updateScore = (global: State, dispatch, action: RecognizeState) => {
+const updateScore = async (global: State, dispatch, action: RecognizeState) => {
     const {scores, selected, phrase, user} = global
     const allChars: string[] = Array.from(phrase)
 
     console.debug("selected characters", selected)
 
+    let scoresToSave: Score[]
     if (action == RecognizeState.allCorrect || action == RecognizeState.allWrong) {
         const correctness = action == RecognizeState.allCorrect
-        allChars.forEach(c => {
+        scoresToSave = allChars.map(c => {
             const score = ensureCurrentScore(scores, c)
-            updateCount(correctness, score)
+            return updateCount(correctness, score)
         })
     } else {
         const wrongChars = allChars.filter(c => selected.indexOf(c) < 0)
-        selected.forEach(c => {
+        let correctScores = selected.map(c => {
             const score = ensureCurrentScore(scores, c)
-            updateCount(true, score)
+            return updateCount(true, score)
         })
-        wrongChars.forEach(c => {
+        let incorrectScores = wrongChars.map(c => {
             const score = ensureCurrentScore(scores, c)
-            updateCount(false, score)
+            return updateCount(false, score)
         })
+        scoresToSave = [...correctScores, ...incorrectScores]
     }
-    return {scores}
+    try {
+        await saveUserScore(user.username, scoresToSave, [phrase])
+        return {scores}
+    } catch (e) {
+        return {error: e, scores}
+    }
 }
 
 const getNextPhrase = (global:State, dispatch) => {
-    const {phrases, selected} = global
+    const {phrases} = global
     const next = nextPhrase(phrases)
     return {
         selected: [],

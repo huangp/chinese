@@ -36,7 +36,7 @@ internal class PhraseFamiliarityServiceTest {
     @Test
     fun checkCalculation() {
         val contents = listOf("abc")
-        BDDMockito.given(phraseFamiliarityRepository.findPhraseFamiliaritiesByPhraseContentIn(contents))
+        BDDMockito.given(phraseFamiliarityRepository.findPhraseFamiliaritiesByLearnerEqualsAndPhraseContentIn(learnerUser, contents))
                 .willReturn(toPhraseFamiliarity(*contents.toTypedArray()))
         val countDownLatch = CountDownLatch(1)
 
@@ -45,7 +45,7 @@ internal class PhraseFamiliarityServiceTest {
             savedCaptor.value
         }
 
-        service.calculateFromScores(listOf(Score(1, "a", 1, 0)), contents)
+        service.calculateFromScores(learnerUser, listOf(Score(1, "a", 1, 0)), contents)
         countDownLatch.await()
 
         val saved = savedCaptor.value
@@ -58,7 +58,7 @@ internal class PhraseFamiliarityServiceTest {
     @Test
     fun repeatCharacterWillNotExceedPerCharLimit() {
         val contents = listOf("abc")
-        BDDMockito.given(phraseFamiliarityRepository.findPhraseFamiliaritiesByPhraseContentIn(contents))
+        BDDMockito.given(phraseFamiliarityRepository.findPhraseFamiliaritiesByLearnerEqualsAndPhraseContentIn(learnerUser, contents))
                 .willReturn(toPhraseFamiliarity(*contents.toTypedArray()))
         val countDownLatch = CountDownLatch(1)
 
@@ -67,7 +67,7 @@ internal class PhraseFamiliarityServiceTest {
             savedCaptor.value
         }
 
-        service.calculateFromScores(listOf(Score(1, "a", 100, 0)), contents)
+        service.calculateFromScores(learnerUser, listOf(Score(1, "a", 100, 0)), contents)
         countDownLatch.await()
 
         val saved = savedCaptor.value

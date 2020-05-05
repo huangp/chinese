@@ -2,11 +2,6 @@ import React, {useGlobal, setGlobal} from "reactn"
 import {useState} from "react"
 import {Link, NavLink} from "react-router-dom"
 import classnames from "classnames"
-import {
-    clearUserScoresInLocalStorage,
-    getScoresByUserFromLocalStorage,
-    saveUserScore
-} from "../clientserver/scoreClient";
 import {Loading} from "./Loading";
 import {AwardFillIcon, ChatIcon} from "./Icon";
 import {getNextPhrases} from "../clientserver/phraseClient";
@@ -15,34 +10,11 @@ import {nextPhrase} from "../clientserver/phraseService";
 export const NavBar = () => {
     const [users] = useGlobal('users')
     const [user] = useGlobal('user')
-    const [scores] = useGlobal('scores')
-    const [phrases] = useGlobal('phrases')
     const [loading] = useGlobal('loading')
 
     const [showCollapse, toggleShowCollapse] = useState(false)
 
     const currentUsername = user ? user.username : undefined
-
-    const saveScores = () => {
-        setGlobal({loading: true})
-        users.forEach(async u => {
-            const scoresToSave = u.username === currentUsername ? scores : getScoresByUserFromLocalStorage(u.username)
-            try {
-                await saveUserScore(u.username, scoresToSave, phrases)
-                await clearUserScoresInLocalStorage(u.username)
-                setGlobal({
-                    loading: false,
-                    selected: [],
-                    scores: []
-                })
-            } catch (e) {
-                setGlobal({
-                    loading: false,
-                    error: e
-                })
-            }
-        })
-    }
 
     const getNextNewPhrases = async () => {
         await setGlobal({loading: true})
@@ -106,7 +78,6 @@ export const NavBar = () => {
                     {userNav}
                 </ul>
                 <Loading className={loadingClass} />
-                <button className={actionBtnClass} onClick={saveScores} >Save scores</button>
                 <button className={actionBtnClass} onClick={getNextNewPhrases} >Get new phrases</button>
                 <Link className="btn btn-outline-success m-2 my-sm-0 float-right" to="/phrase/add">Add new phrase</Link>
             </div>

@@ -1,4 +1,3 @@
-- save when click on score recorder
 - add reward system
 - user phrase content hash as primary key?
 - allow supervisor to add child (learner link to a supervisor)

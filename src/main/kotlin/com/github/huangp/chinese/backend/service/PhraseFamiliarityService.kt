@@ -1,5 +1,6 @@
 package com.github.huangp.chinese.backend.service
 
+import com.github.huangp.chinese.backend.model.LearnerUser
 import com.github.huangp.chinese.backend.model.PhraseFamiliarity
 import com.github.huangp.chinese.backend.model.Score
 import com.github.huangp.chinese.backend.repository.PhraseFamiliarityRepository
@@ -8,20 +9,19 @@ import io.reactivex.schedulers.Schedulers
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
-import kotlin.math.max
 
 class PhraseFamiliarityService @Inject constructor(
         private val phraseFamiliarityRepository: PhraseFamiliarityRepository) {
 
-    fun calculateFromScores(scores: Iterable<Score>, phrases: List<String>) {
-        val pf = phraseFamiliarityRepository.findPhraseFamiliaritiesByPhraseContentIn(phrases)
+    fun calculateFromScores(learnerUser: LearnerUser, scores: Iterable<Score>, phrases: List<String>) {
+        val pf = phraseFamiliarityRepository.findPhraseFamiliaritiesByLearnerEqualsAndPhraseContentIn(learnerUser, phrases)
 
         val observable = Observable.fromIterable(pf)
 
         observable
                 .observeOn(Schedulers.computation()) // operate in computation thread
                 .map { phraseFamiliarity ->
-                    logger.info("working on {}", phraseFamiliarity.phrase?.content)
+                    logger.info("working on {} for {}", phraseFamiliarity.phrase?.content, learnerUser.username)
                     // restart familiarity from scratch
                     phraseFamiliarity.familiarity = 0
                     with(phraseFamiliarity.phrase?.content ?: "") {

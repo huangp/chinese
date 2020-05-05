@@ -17,7 +17,7 @@ interface PhraseFamiliarityRepository : JpaRepository<PhraseFamiliarity, PhraseF
             learners: List<LearnerUser>, startFamiliarity: Int, endFamiliarity: Int): List<PhraseFamiliarity>
 
     @EntityGraph("phraseFamiliarityGraph")
-    fun findPhraseFamiliaritiesByPhraseContentIn(contentHashes: List<String>): List<PhraseFamiliarity>
+    fun findPhraseFamiliaritiesByLearnerEqualsAndPhraseContentIn(learnerUser: LearnerUser, contentHashes: List<String>): List<PhraseFamiliarity>
 
     fun findByLearnerInAndFamiliarityBetweenOrderByLastModifiedDateDesc(
             learners: List<LearnerUser>, startFamiliarity: Int, endFamiliarity: Int, pageable: Pageable): List<PhraseFamiliarity>
