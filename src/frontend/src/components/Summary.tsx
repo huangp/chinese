@@ -16,8 +16,8 @@ export const Summary = (props: SummaryProps) => {
     return (
         <ul className="list-group list-group-flush">
             <li className="list-group-item">Number of characters: {scores.length}</li>
-            <li className="list-group-item text-success">Total {totalScore.correct} correct answers: {correctChars}</li>
-            <li className="list-group-item text-danger">Total {totalScore.correct} incorrect answers: {incorrectChars}</li>
+            <li className="list-group-item text-success">Total {totalScore.correct} correct answers in: {correctChars}</li>
+            <li className="list-group-item text-danger">Total {totalScore.correct} incorrect answers in: {incorrectChars}</li>
             <li className="list-group-item text-info">
                 {<Link className="m-2 my-sm-0 float-right" to={`/scoreboard`}>View Score Board</Link>}
             </li>

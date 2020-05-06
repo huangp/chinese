@@ -40,8 +40,8 @@ export const Home = () => {
     return (
         <div className="container">
             <Phrase />
-            <ScoreRecorder />
             <Summary scores={scores}/>
+            <ScoreRecorder />
         </div>
     )
 }

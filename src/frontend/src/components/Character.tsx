@@ -1,7 +1,6 @@
-import React, {useDispatch, useGlobal} from "reactn"
+import React, {useGlobal, setGlobal} from "reactn"
 import {useState} from "react"
 import classname from "classnames"
-import {State} from "reactn/default"
 
 export interface CharacterProps {
     character: string
@@ -9,30 +8,33 @@ export interface CharacterProps {
 }
 
 // reducer to change mark
-const select = (global: State, dispatch, char: string) => {
-    const selected = global.selected
-    if (selected.indexOf(char) < 0) {
-        selected.push(char)
+const updateSelect = (selected: string[], char: string, select: boolean): string[] => {
+    const index = selected.indexOf(char)
+    if (select) {
+        if (index < 0) {
+            selected.push(char)
+        }
+    } else {
+        if (index >= 0) {
+            selected.splice(index, 1)
+        }
     }
-    console.log('===')
-    return {selected}
+    return selected
 }
 
 export const Character = (props: CharacterProps) => {
     const {character} = props
     const [selected] = useGlobal('selected')
     const [highlighted, toggleHighlight] = useState(false)
-    const updateSelect = useDispatch(select)
 
     const onClick = e => {
         toggleHighlight(!highlighted)
-        if (!highlighted) {
-            updateSelect(character)
-        }
+        const updatedSelected = updateSelect(selected, character, highlighted);
+        setGlobal({selected: updatedSelected})
     }
 
     const shouldHighlight = selected.indexOf(character) >= 0;
-    const className = classname(props.className, "h1", "m-1", "border border-primary text-center", {
+    const className = classname(props.className, "h1", "m-1 p-1", "border border-primary text-center", {
         'bg-info': shouldHighlight,
         'bg-light': !shouldHighlight
 
