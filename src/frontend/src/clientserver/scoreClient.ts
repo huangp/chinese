@@ -24,6 +24,13 @@ export const getUserScoresForAllFamiliarCharacters = async (username: string) : 
     return apiHandler(response)
 }
 
+export const getUserScoresForAllCharacters = async (username: string) : Promise<Score[]> => {
+    console.info(`getting familiar characters for user ${username}...`)
+
+    const response = await axios.get(`${apiScore}/user/${username}`, {withCredentials: true})
+    return apiHandler(response)
+}
+
 // cached type in localStorage
 interface UserScores {
     user: string;
@@ -44,7 +51,3 @@ export const getScoresByUserFromLocalStorage = (user: string): Score[] => {
     }
 }
 
-export const clearUserScoresInLocalStorage = (username: string): Promise<void> => {
-    localStorage.removeItem(username)
-    return Promise.resolve()
-}

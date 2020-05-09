@@ -27,10 +27,10 @@ export const Character = (props: CharacterProps) => {
     const [selected] = useGlobal('selected')
     const [highlighted, toggleHighlight] = useState(false)
 
-    const onClick = e => {
+    const onClick = async e => {
         toggleHighlight(!highlighted)
         const updatedSelected = updateSelect(selected, character, highlighted);
-        setGlobal({selected: updatedSelected})
+        await setGlobal({selected: updatedSelected})
     }
 
     const shouldHighlight = selected.indexOf(character) >= 0;

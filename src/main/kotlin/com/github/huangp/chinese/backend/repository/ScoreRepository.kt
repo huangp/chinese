@@ -8,6 +8,7 @@ import org.springframework.data.repository.CrudRepository
 interface ScoreRepository : CrudRepository<Score, ScoreId> {
 
     fun findScoresByCharacterInAndLearnerEquals(characters: Iterable<String>, learnerUser: LearnerUser): Iterable<Score>
+    fun findScoresByLearnerEquals(learnerUser: LearnerUser): Iterable<Score>
 
     fun findScoresByLearnerEqualsAndCorrectGreaterThanOrderByFirstSeenAsc(learnerUser: LearnerUser, correctGreaterCount: Int): List<Score>
 }

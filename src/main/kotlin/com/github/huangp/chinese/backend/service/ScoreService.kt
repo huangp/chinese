@@ -84,14 +84,12 @@ open class ScoreService @Inject constructor(
     @GET
     @Path("user/{username}")
     @Transactional(readOnly = true)
-    open fun getAllForUser(@PathParam("username") username: String, @QueryParam("phrase") phrase: String): Response {
+    open fun getAllForUser(@PathParam("username") username: String): Response {
         val user = learnerRepository.findByUsername(username)
-        return if (user == null || phrase.isBlank()) {
+        return if (user == null) {
             Response.status(Response.Status.NOT_FOUND).build()
         } else {
-            val characters = phrase.toCharArray().map { it.toString() }
-            log.info("characters: {}", characters)
-            val scores: List<ScoreDto> = scoreRepository.findScoresByCharacterInAndLearnerEquals(characters, user).map { it.toDto() }
+            val scores: List<ScoreDto> = scoreRepository.findScoresByLearnerEquals(user).map { it.toDto() }
             Response.ok(scores).build()
         }
     }
