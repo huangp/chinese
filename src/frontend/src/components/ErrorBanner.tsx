@@ -1,4 +1,4 @@
-import React, {useGlobal, setGlobal} from "reactn"
+import * as React from "react"
 import {useState} from "react"
 import classnames from "classnames"
 

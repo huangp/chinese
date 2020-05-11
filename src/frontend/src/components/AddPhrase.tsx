@@ -1,4 +1,4 @@
-import React from "reactn"
+import * as React from "react"
 import {useState} from "react"
 import {addPhrase} from "../clientserver/phraseClient";
 import {Link} from "react-router-dom";

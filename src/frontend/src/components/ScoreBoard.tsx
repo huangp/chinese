@@ -1,11 +1,12 @@
-import React from "reactn"
+import * as React from "react"
 import {PureComponent} from "react"
 import {CharacterScore} from "./CharacterScore";
 import {getUserScoresForAllCharacters, getUserScoresForAllFamiliarCharacters} from "../clientserver/scoreClient";
-import {Score} from "../app";
+import {Score, User} from "../app";
 import {getAllCharacters} from "../clientserver/phraseClient";
-import {User} from "../clientserver/userClient";
 import classname from "classnames"
+import {State} from "../reducer";
+import {connect} from "react-redux"
 
 interface StateShape {
     familiarScores: Score[];
@@ -15,7 +16,7 @@ interface StateShape {
 }
 
 export interface ScoreBoardProps {
-    user?: User
+    currentUser: User
 }
 
 enum DisplayType {
@@ -23,16 +24,16 @@ enum DisplayType {
 }
 
 
-export class ScoreBoard extends PureComponent<ScoreBoardProps, StateShape> {
+class ScoreBoard extends PureComponent<ScoreBoardProps, StateShape> {
     constructor(props: ScoreBoardProps) {
         super(props)
         this.state = {familiarScores: [], allCharacters: [], allScores: [], displayType: DisplayType.onlyFamiliar}
     }
 
     componentDidMount() {
-        let user = this.props.user
-        if (user) {
-            Promise.all([getUserScoresForAllFamiliarCharacters(user.username), getAllCharacters(), getUserScoresForAllCharacters(user.username)])
+        let currentUser = this.props.currentUser
+        if (currentUser) {
+            Promise.all([getUserScoresForAllFamiliarCharacters(currentUser.username), getAllCharacters(), getUserScoresForAllCharacters(currentUser.username)])
                 .then(values => {
                     const [scores, allCharacters, allScores] = values
                     this.setState({familiarScores: scores, allCharacters, allScores})
@@ -41,13 +42,13 @@ export class ScoreBoard extends PureComponent<ScoreBoardProps, StateShape> {
     }
 
     render() {
-        const user = this.props.user
+        const currentUser = this.props.currentUser
         const {familiarScores, allScores, allCharacters, displayType} = this.state
         const allCharCount = allCharacters.length
         const percentNum = allCharCount !== 0 ? Math.round(familiarScores.length / allCharCount * 100) : 0
         const percent = `${percentNum}%`
 
-        const leadingText = user ? `${user.name} knows ${familiarScores.length} out of ${allCharCount}: ${percent}` : 'Need to select a user first!'
+        const leadingText = currentUser ? `${currentUser.name} knows ${familiarScores.length} out of ${allCharCount}: ${percent}` : 'Need to select a user first!'
 
 
         let charsSummary = undefined
@@ -110,3 +111,12 @@ export class ScoreBoard extends PureComponent<ScoreBoardProps, StateShape> {
 
 
 }
+
+const mapStateToProps = (state: State) => {
+    const {currentUsername, users} = state
+    return {
+        currentUser: users.find(u => u.username === currentUsername)
+    }
+}
+
+export default connect(mapStateToProps)(ScoreBoard)

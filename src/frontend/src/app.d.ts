@@ -9,3 +9,7 @@ export interface HasClassName {
     className?: string
 }
 
+export interface User {
+    username: string;
+    name: string
+}

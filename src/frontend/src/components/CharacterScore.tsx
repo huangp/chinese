@@ -1,4 +1,4 @@
-import React from "reactn"
+import * as React from "react"
 import {Score} from "../app";
 export interface CharacterScoreProps {
     score: Score

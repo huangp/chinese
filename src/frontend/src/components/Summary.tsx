@@ -1,4 +1,4 @@
-import React, {useGlobal} from "reactn"
+import * as React from "react"
 import {Score} from "../app"
 import {getTotalScore} from "../utils";
 import {Link} from "react-router-dom";

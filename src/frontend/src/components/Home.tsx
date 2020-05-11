@@ -1,47 +1,62 @@
-import React, {useGlobal, setGlobal} from "reactn"
-import {Phrase} from "./Phrase"
-import {ScoreRecorder} from "./ScoreRecorder"
+import * as React from "react"
+import Phrase from "./Phrase"
+import ScoreRecorder from "./ScoreRecorder"
 import {Summary} from "./Summary";
 import { useParams } from "react-router-dom";
-import {getScoresByUserFromLocalStorage, saveScoresToLocalStorage} from "../clientserver/scoreClient";
-import {errorHandler} from "../utils";
-import {State} from "reactn/default";
 import {Loading} from "./Loading";
+import {connect} from "react-redux"
+import {Score, User} from "../app";
+import {switchUserAction} from "../action";
+import {State} from "../reducer";
 
-export const Home = () => {
+interface HomeProps {
+    scores: Score[],
+    currentUsername: string,
+    users: User[],
+    switchUser: (string) => void
+}
+
+const Home = (props: HomeProps) => {
     const {username} = useParams()
+    const {scores, currentUsername, users, switchUser} = props
 
-    const [scores] = useGlobal("scores")
-    const [user] = useGlobal('user')
-    const [users] = useGlobal('users')
-    const currentUser = user ? user.username : undefined
 
-    if (currentUser === undefined && users.length == 0) {
+    if (currentUsername === undefined && users.length == 0) {
         // the app is not ready yet
         return <Loading/>
     }
 
-    if (currentUser !== username) {
+    if (currentUsername !== username) {
         const selectUser = users.find(u => u.username === username)
 
         // we need to switch user
-        console.info(`switching user from ${currentUser} to ${selectUser.username}`)
-        const promise = saveScoresToLocalStorage(currentUser, scores)
-            .then(() => getScoresByUserFromLocalStorage(username))
-            .then(scores => ({
-                    user: selectUser,
-                    scores,
-                    selected: []
-                })
-            ).catch(errorHandler);
-        setGlobal<State>(promise)
+        console.info(`switching user from ${currentUsername} to ${selectUser.username}`)
+
+        if (selectUser) {
+            // TODO hack
+            setTimeout(() => switchUser(selectUser), 100)
+        }
     }
 
     return (
         <div className="container">
-            <Phrase />
+            <Phrase/>
             <Summary scores={scores}/>
             <ScoreRecorder />
         </div>
     )
 }
+
+const mapStateToProps = (state: State) => {
+    return {
+        scores: state.scores,
+        users: state.users,
+        currentUsername: state.currentUsername
+    }
+}
+
+const mapDispatchToProps = dispatch => ({
+    switchUser: user => dispatch(switchUserAction(user))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home)

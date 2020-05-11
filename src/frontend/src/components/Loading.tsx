@@ -1,4 +1,4 @@
-import React from "reactn"
+import * as React from "react"
 import {HasClassName} from "../app";
 
 export const Loading = (props: HasClassName) => (<div className={"spinner-border text-warning " + props.className} role="status">

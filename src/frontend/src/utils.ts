@@ -1,6 +1,6 @@
 import {Score} from "./app";
 
-export const errorHandler = (err: Error | string) => {
+export const errorHandler = (err: Error | string): {error:string} => {
     console.error(err)
     if (err instanceof Error) {
         return {error: err.message}
@@ -10,7 +10,6 @@ export const errorHandler = (err: Error | string) => {
 }
 
 export const getTotalScore = (scores: Score[]): Score => {
-    console.info("===")
     return scores.reduce((prev, curr): Score => {
         return {
             correct: curr.correct + prev.correct,

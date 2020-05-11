@@ -1,9 +1,14 @@
-import React, {useGlobal} from "reactn"
-import {Score} from "../app";
+import * as React from "react"
 import {getTotalScore} from "../utils";
+import {connect} from "react-redux"
+import {Score} from "../app";
 
-export const ScoreBadge = () => {
-    const [scores] = useGlobal('scores')
+interface ScoreBadgeProps {
+    scores: Score[]
+}
+
+const ScoreBadge = (props: ScoreBadgeProps) => {
+    const scores = props.scores
     const totalScore = getTotalScore(scores)
 
     const totalCharacters = scores.length
@@ -17,3 +22,9 @@ export const ScoreBadge = () => {
     )
 
 }
+
+const mapStateToProps = state => ({
+    scores: state.scores
+})
+
+export default connect(mapStateToProps)(ScoreBadge)

@@ -1,4 +1,4 @@
-import React, {useGlobal, setGlobal} from "reactn"
+import * as React from "react"
 import {useState} from "react"
 import {Link, NavLink} from "react-router-dom"
 import classnames from "classnames"
@@ -6,33 +6,42 @@ import {Loading} from "./Loading";
 import {AwardFillIcon, ChatIcon} from "./Icon";
 import {getNextPhrases} from "../clientserver/phraseClient";
 import {nextPhrase} from "../clientserver/phraseService";
+import {connect} from "react-redux"
+import {User} from "../app";
+import {State} from "../reducer";
 
-export const NavBar = () => {
-    const [users] = useGlobal('users')
-    const [user] = useGlobal('user')
-    const [loading] = useGlobal('loading')
+interface NavBarProps {
+    users: User[],
+    username: string,
+    loading: boolean,
+    loadNewPhrases: () => any
+}
+
+const NavBar = (props: NavBarProps) => {
+    const {username, users, loading, loadNewPhrases} = props
 
     const [showCollapse, toggleShowCollapse] = useState(false)
 
-    const currentUsername = user ? user.username : undefined
+    const currentUsername = username
 
     const getNextNewPhrases = async () => {
-        await setGlobal({loading: true})
-        try {
-            const phrases = await getNextPhrases()
-            setGlobal({
-                loading: false,
-                selected: [],
-                scores: [],
-                phrases,
-                phrase: nextPhrase(phrases, 0)
-            })
-        } catch (e) {
-            setGlobal({
-                loading: false,
-                error: e
-            })
-        }
+        loadNewPhrases()
+        // await setGlobal({loading: true})
+        // try {
+        //     const phrases = await getNextPhrases()
+        //     setGlobal({
+        //         loading: false,
+        //         selected: [],
+        //         scores: [],
+        //         phrases,
+        //         phrase: nextPhrase(phrases, 0)
+        //     })
+        // } catch (e) {
+        //     setGlobal({
+        //         loading: false,
+        //         error: e
+        //     })
+        // }
     }
 
     const navDivClassname = classnames('collapse navbar-collapse', {
@@ -85,3 +94,15 @@ export const NavBar = () => {
     )
 
 }
+
+const mapStateToProps = (state: State) => ({
+    loading: state.loading,
+    username: state.currentUsername,
+    users: state.users
+})
+
+const mapDispatchToProps = dispatch => ({
+    loadNewPhrases: () => dispatch({type: "GET_NEW_PHRASES"})
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar)
