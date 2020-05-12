@@ -1,5 +1,6 @@
-import {createAction} from "redux-api-middleware"
 import {
+    GET_NEW_PHRASES_FAILURE,
+    GET_NEW_PHRASES_REQUEST, GET_NEW_PHRASES_SUCCESS,
     MARK_SCORE,
     MarkScoreAction,
     NEXT_PHRASE,
@@ -11,6 +12,7 @@ import {
     SwitchUSerAction
 } from "./types";
 import {User} from "../app";
+import {getNextSetOfPhrases} from "../clientserver/phraseClient";
 
 
 export const toggleSelectCharacter = (char: string): SelectCharacterAction => {
@@ -39,3 +41,15 @@ export const markScoresAction = (state: RecognizeState) : MarkScoreAction => ({
 export const nextPhraseAction = (): NextPhraseAction => ({
     type: NEXT_PHRASE
 })
+
+export const getNewPhrasesAction = (): (dispatch) => any => {
+    return async dispatch => {
+        dispatch({type: GET_NEW_PHRASES_REQUEST})
+        try {
+            const phrases: string[] = await getNextSetOfPhrases()
+            dispatch({type: GET_NEW_PHRASES_SUCCESS, payload: phrases})
+        } catch (e) {
+            dispatch({type: GET_NEW_PHRASES_FAILURE, error: e})
+        }
+    }
+}

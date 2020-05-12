@@ -2,32 +2,11 @@ import {MARK_SCORE, MarkScoreAction, RecognizeState} from "../action/types";
 import {saveUserScore} from "../clientserver/scoreClient";
 import {Score} from "../app";
 
-const ensureCurrentScore = (scores: Score[], character: string): Score => {
-    let current = scores.findIndex(v => v.character === character)
-    let currentScore
-    if (current >= 0) {
-        currentScore = {...scores[current]}
-    } else {
-        currentScore = {character, correct: 0, incorrect: 0}
-    }
-    return currentScore
-}
-
-const updateCount = (correct: boolean, currentScore: Score): Score => {
-    if (correct) {
-        currentScore.correct++
-    } else {
-        currentScore.incorrect++
-    }
-    return currentScore
-}
-
 export default store => next => async action => {
     if (action.type !== MARK_SCORE) {
         return next(action)
     }
-    console.info("saving scores ===")
-    const {currentUsername, scores, phrase, selected} = store.getState()
+    const {currentUsername, phrase, selected} = store.getState()
     const allChars: string[] = Array.from(phrase)
     let scoresToSave: Score[]
     const markState = action.payload.state
@@ -55,6 +34,7 @@ export default store => next => async action => {
 
     }
 
+    console.info(`saving scores ${currentUsername}`, scoresToSave)
     const updatedAction: MarkScoreAction = {type: action.type, payload: {state: markState, scoresForPhrase: scoresToSave}}
     try {
         await saveUserScore(currentUsername, scoresToSave, [phrase])

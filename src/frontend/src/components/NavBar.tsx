@@ -4,11 +4,10 @@ import {Link, NavLink} from "react-router-dom"
 import classnames from "classnames"
 import {Loading} from "./Loading";
 import {AwardFillIcon, ChatIcon} from "./Icon";
-import {getNextPhrases} from "../clientserver/phraseClient";
-import {nextPhrase} from "../clientserver/phraseService";
 import {connect} from "react-redux"
 import {User} from "../app";
 import {State} from "../reducer";
+import {getNewPhrasesAction} from "../action";
 
 interface NavBarProps {
     users: User[],
@@ -23,26 +22,6 @@ const NavBar = (props: NavBarProps) => {
     const [showCollapse, toggleShowCollapse] = useState(false)
 
     const currentUsername = username
-
-    const getNextNewPhrases = async () => {
-        loadNewPhrases()
-        // await setGlobal({loading: true})
-        // try {
-        //     const phrases = await getNextPhrases()
-        //     setGlobal({
-        //         loading: false,
-        //         selected: [],
-        //         scores: [],
-        //         phrases,
-        //         phrase: nextPhrase(phrases, 0)
-        //     })
-        // } catch (e) {
-        //     setGlobal({
-        //         loading: false,
-        //         error: e
-        //     })
-        // }
-    }
 
     const navDivClassname = classnames('collapse navbar-collapse', {
         show: showCollapse
@@ -87,7 +66,7 @@ const NavBar = (props: NavBarProps) => {
                     {userNav}
                 </ul>
                 <Loading className={loadingClass} />
-                <button className={actionBtnClass} onClick={getNextNewPhrases} >Get new phrases</button>
+                <button className={actionBtnClass} onClick={loadNewPhrases} >Get new phrases</button>
                 <Link className="btn btn-outline-success m-2 my-sm-0 float-right" to="/phrase/add">Add new phrase</Link>
             </div>
         </nav>
@@ -102,7 +81,7 @@ const mapStateToProps = (state: State) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    loadNewPhrases: () => dispatch({type: "GET_NEW_PHRASES"})
+    loadNewPhrases: () => dispatch(getNewPhrasesAction())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(NavBar)

@@ -8,6 +8,7 @@ import {connect} from "react-redux"
 import {Score, User} from "../app";
 import {switchUserAction} from "../action";
 import {State} from "../reducer";
+import {saveScoresToLocalStorage} from "../clientserver/scoreClient";
 
 interface HomeProps {
     scores: Score[],
@@ -33,8 +34,8 @@ const Home = (props: HomeProps) => {
         console.info(`switching user from ${currentUsername} to ${selectUser.username}`)
 
         if (selectUser) {
-            // TODO hack
-            setTimeout(() => switchUser(selectUser), 100)
+            saveScoresToLocalStorage(currentUsername, scores)
+                .then(() => switchUser(selectUser))
         }
     }
 

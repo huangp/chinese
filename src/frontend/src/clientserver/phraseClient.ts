@@ -24,8 +24,7 @@ export const getAllCharacters = async (): Promise<string[]> => {
 }
 
 let page = 0
-
-export const getNextPhrases = async (): Promise<string[]> => {
+export const getNextSetOfPhrases = async (): Promise<string[]> => {
     console.debug("=== getting next set of phrase ===")
     // clear local cache
     localStorage.clear()

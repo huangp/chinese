@@ -7,7 +7,6 @@ export const SWITCH_USER = 'SWITCH_USER'
 
 
 // get phrases
-
 export const GET_NEW_PHRASES_REQUEST = "GET_NEW_PHRASES_REQUEST"
 export const GET_NEW_PHRASES_SUCCESS = "GET_NEW_PHRASES_SUCCESS"
 export const GET_NEW_PHRASES_FAILURE = "GET_NEW_PHRASES_FAILURE"
@@ -46,8 +45,8 @@ export interface SwitchUSerAction {
 
 export interface NewPhrasesAction {
     type: typeof GET_NEW_PHRASES_REQUEST | typeof GET_NEW_PHRASES_SUCCESS | typeof GET_NEW_PHRASES_FAILURE
-    payload? : object,
-    error? : boolean
+    payload? : string[],
+    error? : Error
 }
 
 
