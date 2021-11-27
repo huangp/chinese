@@ -16,11 +16,11 @@ export const addPhrase = async (content: string): Promise<void> => {
     return apiHandler<void>(response)
 }
 
-export const getAllCharacters = async (): Promise<string[]> => {
+export const getAllCharacters = async (): Promise<number> => {
     console.debug("=== getting all characters ===")
 
-    const response = await axios.get(`${apiPhrase}/allcharacters`, {withCredentials: true})
-    return apiHandler<string[]>(response)
+    const response = await axios.get(`${apiPhrase}/allcharacters/size`, {withCredentials: true})
+    return apiHandler<number>(response)
 }
 
 let page = 0

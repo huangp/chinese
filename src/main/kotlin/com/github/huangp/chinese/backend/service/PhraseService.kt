@@ -122,6 +122,14 @@ open class PhraseService @Inject constructor(
     }
 
     @GET
+    @Path("allcharacters/size")
+    @Transactional(readOnly = true)
+    open fun getAllCharactersSize(): Int {
+        val allChars: List<String> = phraseRepository.findAll().map { phrase -> phrase.content.toCharArray().map { it.toString() } }.flatten()
+        return allChars.toSet().size
+    }
+
+    @GET
     @Path("recent")
     @Transactional(readOnly = true)
     open fun getRecentPhrases(): Set<String> {

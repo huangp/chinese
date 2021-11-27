@@ -10,7 +10,7 @@ import {connect} from "react-redux"
 
 interface StateShape {
     familiarScores: Score[];
-    allCharacters: string[];
+    allCharCount: number;
     allScores: Score[];
     displayType: DisplayType;
 }
@@ -27,7 +27,7 @@ enum DisplayType {
 class ScoreBoard extends PureComponent<ScoreBoardProps, StateShape> {
     constructor(props: ScoreBoardProps) {
         super(props)
-        this.state = {familiarScores: [], allCharacters: [], allScores: [], displayType: DisplayType.onlyFamiliar}
+        this.state = {familiarScores: [], allCharCount: 0, allScores: [], displayType: DisplayType.onlyFamiliar}
     }
 
     componentDidMount() {
@@ -35,16 +35,27 @@ class ScoreBoard extends PureComponent<ScoreBoardProps, StateShape> {
         if (currentUser) {
             Promise.all([getUserScoresForAllFamiliarCharacters(currentUser.username), getAllCharacters(), getUserScoresForAllCharacters(currentUser.username)])
                 .then(values => {
-                    const [scores, allCharacters, allScores] = values
-                    this.setState({familiarScores: scores, allCharacters, allScores})
+                    const [scores, allCharCount, allScores] = values
+                    this.setState({familiarScores: scores, allCharCount, allScores})
                 })
         }
     }
 
+    onlyFamiliarCallback = () => {
+        this.setState({...this.state, displayType: DisplayType.onlyFamiliar})
+    }
+
+    onlyCorrectCallback = () => {
+        this.setState({...this.state, displayType: DisplayType.onlyCorrect})
+    }
+
+    onlyIncorrectCallback = () => {
+        this.setState({...this.state, displayType: DisplayType.onlyIncorrect})
+    }
+
     render() {
         const currentUser = this.props.currentUser
-        const {familiarScores, allScores, allCharacters, displayType} = this.state
-        const allCharCount = allCharacters.length
+        const {familiarScores, allScores, allCharCount, displayType} = this.state
         const percentNum = allCharCount !== 0 ? Math.round(familiarScores.length / allCharCount * 100) : 0
         const percent = `${percentNum}%`
 
@@ -81,11 +92,6 @@ class ScoreBoard extends PureComponent<ScoreBoardProps, StateShape> {
             active: displayType == DisplayType.onlyIncorrect
         })
 
-        const onlyFamiliarCallback = e => this.setState({...this.state, displayType: DisplayType.onlyFamiliar})
-        const onlyCorrectCallback = e => this.setState({...this.state, displayType: DisplayType.onlyCorrect})
-        const onlyIncorrectCallback = e => this.setState({...this.state, displayType: DisplayType.onlyIncorrect})
-
-
 
         return (
             <ul className="list-group list-group-flush">
@@ -99,9 +105,9 @@ class ScoreBoard extends PureComponent<ScoreBoardProps, StateShape> {
                 </li>
                 <li className="list-group-item">
                     <ul className="list-group list-group-horizontal">
-                        <li className={onlyFamiliarClass} onClick={onlyFamiliarCallback}>Familiar Characters {onlyFamiliarBadge}</li>
-                        <li className={onlyCorrectClass} onClick={onlyCorrectCallback}>Correct Characters {onlyCorrectBadge}</li>
-                        <li className={onlyIncorrectClass} onClick={onlyIncorrectCallback}>Incorrect Characters {onlyIncorrectBadge}</li>
+                        <li className={onlyFamiliarClass} onClick={this.onlyFamiliarCallback}>Familiar Characters {onlyFamiliarBadge}</li>
+                        <li className={onlyCorrectClass} onClick={this.onlyCorrectCallback}>Correct Characters {onlyCorrectBadge}</li>
+                        <li className={onlyIncorrectClass} onClick={this.onlyIncorrectCallback}>Incorrect Characters {onlyIncorrectBadge}</li>
                     </ul>
                 </li>
                 {charsSummary}
