@@ -16,6 +16,12 @@ export const addPhrase = async (content: string): Promise<void> => {
     return apiHandler<void>(response)
 }
 
+export const bulkAddPhrases = async (content: string) => {
+    const payload = content.split('\n');
+    const response = await axios.put(`${apiPhrase}`, payload, {withCredentials: true})
+    return apiHandler<void>(response)
+}
+
 export const getAllCharacters = async (): Promise<number> => {
     console.debug("=== getting all characters ===")
 

@@ -77,7 +77,7 @@ open class PhraseService @Inject constructor(
         val supervisor = authenticatedSupervisorService.getAuthenticatedSupervisor()
         val learners = learnerRepository.findAllBySupervisorEqualsAndActiveTrue(supervisor)
 
-        val newPhrases = phrases.toSet().map {
+        val newPhrases = phrases.toSet().filter { it.isNotBlank() }.map {
             val computeContentHash = Phrase.computeContentHash(it)
             Pair(it, computeContentHash)
         }.filter {

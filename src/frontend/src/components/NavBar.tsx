@@ -68,6 +68,7 @@ const NavBar = (props: NavBarProps) => {
                 <Loading className={loadingClass} />
                 <button className={actionBtnClass} onClick={loadNewPhrases} >Get new phrases</button>
                 <Link className="btn btn-outline-success m-2 my-sm-0 float-right" to="/phrase/add">Add new phrase</Link>
+                <Link className="btn btn-outline-success m-2 my-sm-0 float-right" to="/text/check">Check text</Link>
             </div>
         </nav>
     )

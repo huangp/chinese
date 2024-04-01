@@ -38,8 +38,7 @@ open class ScoreService @Inject constructor(
     @POST
     @ApiOperation(value = "Add scores for a user", response = Void::class)
     @ApiResponses(value = [
-        ApiResponse(code = 201, message = "Phrase created"),
-        ApiResponse(code = 200, message = "Phrase already exists")
+        ApiResponse(code = 200, message = "score updated")
     ]
     )
     @Path("/user/{username}")
@@ -117,6 +116,18 @@ open class ScoreService @Inject constructor(
     @Transactional(readOnly = true)
     open fun getAll(): List<Score> {
         return scoreRepository.findAll().toList()
+    }
+
+    @POST
+    @Path("/user/{username}/known")
+    @Transactional(readOnly = true)
+    open fun getKnownCharactersForUser(@PathParam("username") username: String, characters: Set<String>): Set<String> {
+        val learner = learnerRepository.findByUsername(username) ?: throw NotFoundException("$username not found")
+
+        val scores: List<Score> = scoreRepository.findKnownCharactersScoresForLearner(characters, learner)
+
+        val known = scores.map { it.character }.toSet()
+        return known
     }
 
     companion object {

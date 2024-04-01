@@ -14,6 +14,7 @@ import {AddPhrase} from "./AddPhrase";
 import ScoreBoard from "./ScoreBoard";
 import Banner from "./Banner"
 import {User} from "../app";
+import CheckText from "./CheckText";
 
 interface AppProps {
     users: User[],
@@ -32,6 +33,9 @@ const App = (props: AppProps) => {
                 <Switch>
                     <Route path="/phrase/add">
                         <AddPhrase/>
+                    </Route>
+                    <Route path="/text/check">
+                        <CheckText />
                     </Route>
                     <Route path="/scoreboard">
                         <ScoreBoard />

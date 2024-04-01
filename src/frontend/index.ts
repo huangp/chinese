@@ -12,7 +12,7 @@ import {nextPhrase} from "./src/clientserver/phraseService";
 
 const phrasesPromise: Promise<string[]> = getPhrases()
 const usersPromise: Promise<User[]> = getUsers()
-const allPromises: Promise<[string[], User[]]> = Promise.all<string[], User[]>([phrasesPromise, usersPromise])
+const allPromises: Promise<[string[], User[]]> = Promise.all([phrasesPromise, usersPromise])
 
 allPromises.then(values => {
     const [phrases, users] = values

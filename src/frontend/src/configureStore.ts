@@ -1,11 +1,11 @@
 import {applyMiddleware, compose, createStore, StoreEnhancer} from "redux"
-import thunkMiddleware from "redux-thunk"
+import {thunk} from "redux-thunk"
 import logger from "redux-logger"
 import {initialState, rootReducer} from "./reducer";
 import saveUserScoresMiddleware from "./middleware/saveUserScoresMiddleware"
 
 export default function configureStore(preloadedState) {
-    const middlewares = [saveUserScoresMiddleware, thunkMiddleware, logger]
+    const middlewares = [saveUserScoresMiddleware, thunk, logger]
     const middlewareEnhancer = applyMiddleware(...middlewares)
 
     const enhancers = [middlewareEnhancer]

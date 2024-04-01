@@ -6,12 +6,13 @@ export interface CharacterProps {
     character: string,
     onClickCharacter: (char: string) => void,
     [propName: string]: any;
+    isKnown: boolean;
 }
 
 
 
 export const Character = (props: CharacterProps) => {
-    const {character, selectedChars, onClickCharacter} = props
+    const {character, selectedChars, onClickCharacter, isKnown} = props
 
     const alreadySelected = selectedChars.indexOf(character) >= 0;
 
@@ -19,7 +20,8 @@ export const Character = (props: CharacterProps) => {
 
     const className = classname(props.className, "h1", "m-1 p-1", "border border-primary text-center", {
         'bg-info': alreadySelected,
-        'bg-light': !alreadySelected
+        'bg-light': !alreadySelected,
+        'text-success': isKnown
 
     })
 

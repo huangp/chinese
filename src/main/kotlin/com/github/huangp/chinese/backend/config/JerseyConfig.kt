@@ -19,6 +19,7 @@ class JerseyConfig : ResourceConfig() {
         register(PhraseService::class.java)
         register(ScoreService::class.java)
         register(SupervisorService::class.java)
+        register(TextService::class.java)
         register(UniqueConstraintViolationExceptionMapper::class.java)
         property(org.glassfish.jersey.server.ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true)
 //        configureSwagger()

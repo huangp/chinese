@@ -18,7 +18,7 @@ interface HomeProps {
 }
 
 const Home = (props: HomeProps) => {
-    const {username} = useParams()
+    const {username} = useParams() as {username?: string}
     const {scores, currentUsername, users, switchUser} = props
 
 

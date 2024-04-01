@@ -17,3 +17,5 @@ data class LearnerDto(@get: NotBlank @get: Size(min = 5, max = 40) val username:
  * Used by add score end point
  */
 data class UpdateScoresDto(@get: NotEmpty val phrases: List<String>, @get: NotNull val scores: List<ScoreDto>)
+
+data class TextCheck(val phrases: List<String>, val known: Set<String>, val total: Int, val unknownCount: Int)

@@ -31,6 +31,11 @@ export const getUserScoresForAllCharacters = async (username: string) : Promise<
     return apiHandler(response)
 }
 
+export const getUserKnownCharacters = async (username: string, chars: string[]): Promise<string[]> => {
+    const response = await axios.post(`${apiScore}/user/${username}/known`, chars,{withCredentials: true})
+    return apiHandler(response)
+}
+
 // cached type in localStorage
 interface UserScores {
     user: string;
